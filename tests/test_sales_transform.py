@@ -57,5 +57,6 @@ class TestSalesTransform(unittest.TestCase):
         with self.assertRaises(ValueError):
             average_transaction_value([])
 
+
 if __name__ == "__main__":
     unittest.main()
