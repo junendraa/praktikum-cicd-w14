@@ -1,0 +1,15 @@
+# Target deployment berbasis Docker (pengganti VM Ubuntu).
+services:
+  cicd-target:
+    build: ./docker/target
+    container_name: cicd-target
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - runner-home:/home/ghrunner/actions-runner
+      - data-cluster:/opt/data-cluster
+      - ./scripts:/opt/practicum/scripts:ro
+
+volumes:
+  runner-home:
+  data-cluster:

@@ -1,7 +1,6 @@
-"""Definisi DAG demonstrasi; bukan sintaks platform orkestrasi tertentu."""
+"""Definisi DAG demonstrasi penjualan harian; bukan sintaks platform orkestrasi tertentu."""
 
 from pathlib import Path
-
 from src.sales_transform import load_sales, summarize_sales
 
 DAG_ID = "sales_daily_summary"
