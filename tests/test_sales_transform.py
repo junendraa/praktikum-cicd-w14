@@ -4,7 +4,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from src.sales_transform import load_sales, summarize_sales, total_revenue
+from src.sales_transform import (
+    average_transaction_value,
+    load_sales,
+    summarize_sales,
+    total_revenue,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -36,6 +41,21 @@ class TestSalesTransform(unittest.TestCase):
             with self.assertRaises(ValueError):
                 load_sales(csv_path)
 
+    def test_average_transaction_value(self):
+        # 351000 / 8 transaksi = 43875
+        self.assertEqual(average_transaction_value(self.rows), 43875)
+
+    def test_average_transaction_value_manual_rows(self):
+        rows = [
+            {"quantity": 2, "unit_price": 10000},
+            {"quantity": 1, "unit_price": 40000},
+        ]
+        # (20000 + 40000) / 2 = 30000
+        self.assertEqual(average_transaction_value(rows), 30000)
+
+    def test_average_transaction_value_empty_rows(self):
+        with self.assertRaises(ValueError):
+            average_transaction_value([])
 
 if __name__ == "__main__":
     unittest.main()
