@@ -39,6 +39,7 @@ def total_revenue(rows):
     """Menghitung total omzet seluruh baris."""
     return sum(row["quantity"] * row["unit_price"] for row in rows)
 
+
 def average_transaction_value(rows):
     """Menghitung rata-rata nilai per transaksi (omzet / jumlah transaksi)."""
     if not rows:
