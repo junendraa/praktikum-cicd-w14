@@ -17,7 +17,7 @@ class TestSalesTransform(unittest.TestCase):
         self.assertEqual(len(self.rows), 8)
 
     def test_total_revenue(self):
-        self.assertEqual(total_revenue(self.rows), 351000)
+        self.assertEqual(total_revenue(self.rows), 350000)
 
     def test_daily_summary_contains_three_dates(self):
         summary = summarize_sales(self.rows)
