@@ -1,0 +1,62 @@
+name: CI-CD-DAG
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dag-deployment-main
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Lint and unit test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install development tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Black format check
+        run: black --check .
+
+      - name: Flake8 lint
+        run: flake8 .
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+
+  deploy:
+    name: Deploy DAG to target VM
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, cicd-target]
+    environment: practicum
+    steps:
+      - name: Checkout validated commit
+        uses: actions/checkout@v4
+
+      - name: Deploy release
+        run: bash scripts/deploy.sh
+
+      - name: Verify deployed files
+        run: |
+          test -s /opt/data-cluster/current/dags/sales_daily_dag.py
+          test -s /opt/data-cluster/current/src/sales_transform.py
+          echo "DAG dan modul pendukung tersedia pada target."
